@@ -40,7 +40,9 @@ var barberSchema = new Schema({
         type: String
     }],
     slots: [{
-        type: String
+        hour: { type: Number },
+        min: { type: Number },
+        isOcuupied: { type: Boolean, default: false }
     }],
     //add location...
 })

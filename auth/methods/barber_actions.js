@@ -1,7 +1,6 @@
 var Barber = require('../models/barber');
 var jwt = require('jwt-simple');
 var config = require('../config/dbconfig');
-var Joi = require('joi');
 const fs = require('fs');
 
 function makeid(length) {
@@ -30,7 +29,7 @@ var barberfunctions = {
                     if (!(req.body.tags)) {
                         res.status(403).send({ success: false, msg: 'tags should be equal to 4' })
                     } else {
-                        console.log(req.file);
+                        console.log(req.body.slots.split(", x").forEach(elem => JSON.parse(elem)));
                         const imgpath = req.file ? req.file.path : null;
                         var newBarber = Barber({
                             name: req.body.name,
@@ -40,7 +39,7 @@ var barberfunctions = {
                             id: makeid(8),
                             description: req.body.description,
                             tags: req.body.tags.split(", "),
-                            slots: req.body.slots.split(", "),
+                            slots: req.body.slots.split(", x").forEach(elem => JSON.parse(elem)),
                         });
                         newBarber.save(function (err, newBarber) {
                             if (err) {
@@ -65,7 +64,8 @@ var barberfunctions = {
             } else {
                 if (req.body.name || (req.body.email) || (req.body.openingTime) || (req.body.description) || (req.body.slots) || (req.body.tags) || (req.file)) {
                     console.log(barber.name);
-                    console.log(barber.tags);
+                    var listSlots = [];
+                    req.body.slots ? req.body.slots.split(", x").forEach(elem => listSlots.push(JSON.parse(elem))) : null;
                     const imgpath = req.file ? req.file.path : null;
                     barber.updateOne({
                         name: req.body.name ? req.body.name : barber.name,
@@ -73,7 +73,7 @@ var barberfunctions = {
                         openingTime: req.body.openingTime ? req.body.openingTime : barber.openingTime,
                         image: req.file ? fs.readFileSync(imgpath) : barber.image,
                         tags: req.body.tags ? req.body.tags.split(", ") : barber.tags,
-                        slots: req.body.slots ? req.body.slots.split(", ") : barber.slots,
+                        slots: req.body.slots ? listSlots : barber.slots,
                     }, function (err, succ) {
                         if (err) {
                             res.json({ success: false, msg: 'Failed to change' })
@@ -82,6 +82,19 @@ var barberfunctions = {
                         }
                     })
                 }
+            }
+        })
+    },
+    getbarber: function (req, res) {
+        console.log(req.body.email);
+        Barber.findOne({
+            email: req.body.email,
+        }, function (err, barber) {
+            if (err) throw err;
+            if (!barber) {
+                res.status(403).send({ success: false, msg: 'Barber not found!' })
+            } else {
+                res.send({ success: false, data: barber })
             }
         })
     }
