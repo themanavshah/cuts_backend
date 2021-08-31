@@ -25,7 +25,7 @@ var barberSchema = new Schema({
     },
     image: {
         data: Buffer,
-        type: String,
+        type: Buffer,
         require: false,
     },
     id: {

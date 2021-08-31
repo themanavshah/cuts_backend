@@ -29,7 +29,8 @@ var barberfunctions = {
                     if (!(req.body.tags)) {
                         res.status(403).send({ success: false, msg: 'tags should be equal to 4' })
                     } else {
-                        console.log(req.body.slots.split(", x").forEach(elem => JSON.parse(elem)));
+                        var listSlots = [];
+                        req.body.slots ? req.body.slots.split(", x").forEach(elem => listSlots.push(JSON.parse(elem))) : null;
                         const imgpath = req.file ? req.file.path : null;
                         var newBarber = Barber({
                             name: req.body.name,
@@ -39,7 +40,7 @@ var barberfunctions = {
                             id: makeid(8),
                             description: req.body.description,
                             tags: req.body.tags.split(", "),
-                            slots: req.body.slots.split(", x").forEach(elem => JSON.parse(elem)),
+                            slots: listSlots,
                         });
                         newBarber.save(function (err, newBarber) {
                             if (err) {

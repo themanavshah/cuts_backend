@@ -34,7 +34,7 @@ router.post('/addbarber', upload.single('file'), barberactions.addBarber);
 router.put('/makeachangebarber', upload.single('file'), barberactions.makeAChange);
 //@desc getting detail of a Barber (only for developer, no frontend provided)
 //@route PUT /getbarber
-router.get('/getbarber', upload.single('file'), barberactions.getbarber);
+router.post('/getbarber', upload.single('file'), barberactions.getbarber);
 
 
 //@desc Adding fav Barber to their favBarber

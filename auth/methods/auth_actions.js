@@ -67,7 +67,7 @@ var authfunctions = {
             var token = req.headers.authorization.split(' ')[1]
             var decodedtoken = jwt.decode(token, config.secret)
             console.log(decodedtoken);
-            return res.json({ success: true, name: decodedtoken.name, email: decodedtoken.email })
+            return res.json({ success: true, user: decodedtoken })
         } else {
             return res.json({ success: false, msg: 'No headers' })
         }
